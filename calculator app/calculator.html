@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Colorful Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #4a00e0, #8e2de2);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .calculator {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      width: 360px;
+    }
+
+    .display input {
+      width: 100%;
+      height: 60px;
+      font-size: 1.8em;
+      padding: 10px;
+      text-align: right;
+      border: none;
+      border-radius: 10px;
+      background-color: #2c2c2c;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 15px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 12px;
+      background-color: #3a3a3a;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      background-color: #555;
+    }
+
+    .operator {
+      background-color: #f39c12;
+    }
+
+    .operator:hover {
+      background-color: #e67e22;
+    }
+
+    .equal {
+      grid-column: span 2;
+      background-color: #27ae60;
+    }
+
+    .equal:hover {
+      background-color: #1e8449;
+    }
+
+    .func {
+      background-color: #2980b9;
+    }
+
+    .func:hover {
+      background-color: #1f618d;
+    }
+
+    .memory {
+      background-color: #9b59b6;
+    }
+
+    .memory:hover {
+      background-color: #8e44ad;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display">
+      <input type="text" id="screen" disabled>
+    </div>
+    <div class="buttons">
+      <button class="btn func" onclick="press('(')">(</button>
+      <button class="btn func" onclick="press(')')">)</button>
+      <button class="btn func" onclick="press('Math.sqrt(')">√</button>
+      <button class="btn func" onclick="press('**2')">x²</button>
+      <button class="btn operator" onclick="clearScreen()">AC</button>
+
+      <button class="btn func" onclick="press('Math.sin(')">sin</button>
+      <button class="btn func" onclick="press('Math.cos(')">cos</button>
+      <button class="btn func" onclick="press('Math.tan(')">tan</button>
+      <button class="btn func" onclick="press('Math.log10(')">log</button>
+      <button class="btn operator" onclick="press('%')">%</button>
+
+      <button class="btn" onclick="press('7')">7</button>
+      <button class="btn" onclick="press('8')">8</button>
+      <button class="btn" onclick="press('9')">9</button>
+      <button class="btn operator" onclick="press('/')">÷</button>
+      <button class="btn operator" onclick="del()">⌫</button>
+
+      <button class="btn" onclick="press('4')">4</button>
+      <button class="btn" onclick="press('5')">5</button>
+      <button class="btn" onclick="press('6')">6</button>
+      <button class="btn operator" onclick="press('*')">×</button>
+      <button class="btn func" onclick="press('Math.log(')">ln</button>
+
+      <button class="btn" onclick="press('1')">1</button>
+      <button class="btn" onclick="press('2')">2</button>
+      <button class="btn" onclick="press('3')">3</button>
+      <button class="btn operator" onclick="press('-')">−</button>
+      <button class="btn func" onclick="press('1/')">1/x</button>
+
+      <button class="btn func" onclick="press('Math.PI')">π</button>
+      <button class="btn" onclick="press('0')">0</button>
+      <button class="btn" onclick="press('.')">.</button>
+      <button class="btn operator" onclick="press('+')">+</button>
+      <button class="btn func" onclick="toggleSign()">±</button>
+
+      <button class="btn memory" onclick="memoryAdd()">M+</button>
+      <button class="btn memory" onclick="memoryRecall()">MR</button>
+      <button class="btn memory" onclick="memoryClear()">MC</button>
+      <button class="btn func" onclick="press('Math.E')">e</button>
+      <button class="btn equal" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <!-- Beep sound -->
+  <audio id="clickSound" src="https://www.soundjay.com/button/beep-07.mp3" preload="auto"></audio>
+
+  <script>
+    const screen = document.getElementById("screen");
+    const clickSound = document.getElementById("clickSound");
+    let memory = 0;
+
+    function playSound() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    function press(value) {
+      playSound();
+      screen.value += value;
+    }
+
+    function clearScreen() {
+      playSound();
+      screen.value = "";
+    }
+
+    function del() {
+      playSound();
+      screen.value = screen.value.slice(0, -1);
+    }
+
+    function calculate() {
+      playSound();
+      try {
+        screen.value = eval(screen.value);
+      } catch {
+        screen.value = "Error";
+      }
+    }
+
+    function toggleSign() {
+      playSound();
+      if (screen.value.startsWith("-")) {
+        screen.value = screen.value.slice(1);
+      } else {
+        screen.value = "-" + screen.value;
+      }
+    }
+
+    function memoryAdd() {
+      playSound();
+      try {
+        memory = eval(screen.value);
+        screen.value = "";
+      } catch {
+        screen.value = "Error";
+      }
+    }
+
+    function memoryRecall() {
+      playSound();
+      screen.value += memory;
+    }
+
+    function memoryClear() {
+      playSound();
+      memory = 0;
+    }
+
+    // 🔑 Keyboard Support
+    document.addEventListener("keydown", function (e) {
+      const key = e.key;
+      if (
+        "0123456789.+-*/()%".includes(key) ||
+        key === "(" || key === ")"
+      ) {
+        press(key);
+      } else if (key === "Enter") {
+        e.preventDefault();
+        calculate();
+      } else if (key === "Backspace") {
+        del();
+      } else if (key.toLowerCase() === "c") {
+        clearScreen();
+      }
+    });
+  </script>
+</body>
+</html>
